@@ -1,0 +1,9 @@
+{
+  "mgf_register": true,
+  "mgf_sync": {
+    "dataset_path": "./",
+    "type": "auto-dataset",
+    "description": "Auto-synced dataset folder for STC Intelligence Core",
+    "tags": ["auto-ingest", "mgf"]
+  }
+}
