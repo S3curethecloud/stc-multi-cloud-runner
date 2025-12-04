@@ -77,125 +77,22 @@ This volume assumes you’ve completed:
 ## 🚀 Quickstart — Run the Multi-Cloud Scenario
 
 ```bash
-# 1. Clone the repo
+# Clone the repo
 git clone https://github.com/S3curethecloud/stc-multi-cloud-runner.git
 cd stc-multi-cloud-runner
 
-# 2. Export required environment variables (example)
-export AWS_ACCOUNT_ID="764265373335"
-export AZURE_TENANT_ID="776f9ea5-7add-469d-bc51-8e855e9a1d26"
-export AZURE_SUBSCRIPTION_ID="501c458a-5def-42cf-bbb8-c75078c1cdbc"
-export GCP_PROJECT_ID="caramel-pager-470614-d1"
-export GCP_PROJECT_NUMBER="973064685337"
+# (Optional) Configure cloud environment variables
+# These must match your AWS, Azure, and GCP accounts
+# See docs/setup.md for details
+export AWS_ACCOUNT_ID="XXXXXXXXXXXX"
+export AZURE_TENANT_ID="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+export AZURE_SUBSCRIPTION_ID="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+export GCP_PROJECT_ID="your-gcp-project-id"
 
-# 3. Run the multi-cloud automation (wrapper around terraform + docker)
+# Run the multi-cloud scenario
 chmod +x automation/multicloud_run.sh
 ./automation/multicloud_run.sh
+➡ After deployment, open Grafana:
+http://localhost:3000 → Dashboards → SecureTheCloud
 
-After successful deployment:
-
-Visit Grafana: http://localhost:3000
-
-Open folder: Dashboards → SecureTheCloud
-
-Select: SecureTheCloud — Delta Airline Flight Ops Overview
-
-You should see live logs and metrics coming from AWS, Azure, and GCP.
-
-📂 Repo Structure
-
-(Short version — see /syllabus for full breakdown.)
-
-scenarios/delta-flight-ops/    # documentation for the airline case
-automation/                    # multi-cloud runner scripts
-terraform/                     # AWS, Azure, GCP infra code
-observability/                 # Loki, Promtail, Grafana stack + dashboards
-syllabus/                      # how this volume fits into the entire STC Academy
-
-🧑‍💻 Who This Volume Is For
-
-Cloud & Security Architects
-
-DevSecOps / Platform Engineers
-
-SOC Engineers and Incident Responders
-
-Students learning real, multi-cloud architectures
-
-Anyone building a portfolio-ready, live deployment lab
-
-🔗 Related Repos
-
-Volume 0 — Multi-Cloud Compute Architecture
-https://github.com/S3curethecloud/multi-cloud-compute-architecture
-
-Volume 1 — Identity Foundations (AWS ↔ Entra)
-https://github.com/S3curethecloud/multi-cloud-identity-aws-entra
-
-(Add future volumes here as you publish them.)
-
-
-You can copy that into your new `README.md` and adjust details as you like.
-
----
-
-## 4. `automation/multicloud_run.sh` (up-level from your current script)
-
-Start from your script: :contentReference[oaicite:8]{index=8}  
-
-Here’s an enhanced version tailored to Delta Airline & Volume 8:
-
-```bash
-#!/bin/bash
-set -e
-
-echo "==========================================="
-echo " SecureTheCloud – Volume 8 Multi-Cloud Runner"
-echo " Scenario: Delta Airline Flight Ops Command Center"
-echo "==========================================="
-
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-
-# 0. Pre-flight checks
-echo "[0] Pre-flight checks..."
-command -v terraform >/dev/null 2>&1 || { echo "Terraform is required."; exit 1; }
-command -v docker >/dev/null 2>&1 || { echo "Docker is required."; exit 1; }
-
-# 1. AWS
-echo
-echo "[1] Deploying AWS Flight Ops baseline..."
-pushd "$ROOT_DIR/terraform/aws" >/dev/null
-terraform init
-terraform apply -auto-approve
-popd >/dev/null
-
-# 2. Azure
-echo
-echo "[2] Deploying Azure Ops Portal baseline..."
-pushd "$ROOT_DIR/terraform/azure" >/dev/null
-terraform init
-terraform apply -auto-approve
-popd >/dev/null
-
-# 3. GCP
-echo
-echo "[3] Deploying GCP Analytics/Predictive baseline..."
-pushd "$ROOT_DIR/terraform/gcp" >/dev/null
-terraform init
-terraform apply -auto-approve
-popd >/dev/null
-
-# 4. Observability stack
-echo
-echo "[4] Starting SecureTheCloud Observability (Loki + Promtail + Grafana)..."
-pushd "$ROOT_DIR/observability" >/dev/null
-docker compose up -d
-popd >/dev/null
-
-echo
-echo "==============================================="
-echo " ✅ Delta Airline Flight Ops Command Center is live!"
-echo " - AWS, Azure, GCP infra deployed"
-echo " - Observability stack running on localhost:3000"
-echo " - Open Grafana → Dashboards → SecureTheCloud"
-echo "==============================================="
+You will see live logs & events from AWS, Azure, and GCP.
